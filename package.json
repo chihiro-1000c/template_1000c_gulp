@@ -10,6 +10,7 @@
     "gulp": "^4.0.2",
     "gulp-ejs": "^5.1.0",
     "gulp-htmlmin": "^5.0.1",
+    "gulp-imagemin": "7.1.0",
     "gulp-load-plugins": "^2.0.7",
     "gulp-notify": "^4.0.0",
     "gulp-plumber": "^1.2.1",

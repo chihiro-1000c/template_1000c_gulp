@@ -30,6 +30,8 @@ const distPath = {
   ejs: distBase + "/",
 };
 
+// ------------------------------------------------------------------------
+
 /**
  * ejs
  */
@@ -66,4 +68,29 @@ const ejsHtml = () => {
   );
 };
 
+/**
+ * img
+ */
+const imgMin = () => {
+  return src(srcPath.img)
+    .pipe(
+      //エラーが出ても処理を止めない
+      $.plumber({
+        errorHandler: $.notify.onError("Error:<%= error.message %>"),
+      })
+    )
+    .pipe(
+      $.imagemin([
+        $.imagemin.svgo(),
+        $.imagemin.optipng(),
+        $.imagemin.gifsicle({ optimizationLevel: 3 }),
+      ])
+    )
+    .pipe(dest(distPath.img))
+    .pipe(browserSync.stream());
+};
+
+// ------------------------------------------------------------------------
+
 exports.ejsHtml = ejsHtml;
+exports.imgMin = imgMin;

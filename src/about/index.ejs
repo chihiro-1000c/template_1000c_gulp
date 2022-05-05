@@ -1,0 +1,26 @@
+<%_ const path='./../'; _%>
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <!-- meta -->
+    <%- include('./../_common/_head', { path:path,meta:data.meta['about'],}) %>
+  </head>
+  <body>
+    <%- include('./../_common/_header',{path:path,}) %>
+
+    <!-- main -->
+    <main>
+      <!-- .p-about -->
+      <section id="about" class="p-about c-section">
+        <div class="c-section__inner">
+          <h2 class="c-section__title">タイトルテキスト</h2>
+          <p class="c-section__lead">aboutページです。</p>
+        </div>
+      </section>
+      <!-- /.p-about -->
+    </main>
+    <!-- /main -->
+
+    <%- include('./../_common/_footer',{path:path,}) %>
+  </body>
+</html>

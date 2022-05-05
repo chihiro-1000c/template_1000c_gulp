@@ -1,0 +1,19 @@
+{
+  "name": "template_1000c_gulp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/chihiro-1000c/template_1000c_gulp.git",
+  "author": "chihiro-1000c",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.27.9",
+    "gulp": "^4.0.2",
+    "gulp-ejs": "^5.1.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-load-plugins": "^2.0.7",
+    "gulp-notify": "^4.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-prettier": "^4.0.0",
+    "gulp-rename": "^2.0.0"
+  }
+}

@@ -1,0 +1,53 @@
+// break point
+$breakpoints: (
+  "sm": "screen and (min-width: 576px)",
+  "md": "screen and (min-width: 768px)",
+  "lg": "screen and (min-width: 992px)",
+  "xl": "screen and (min-width: 1200px)",
+  "xxl": "screen and (min-width: 1400px)",
+) !default;
+
+@mixin mq($breakpoint: md) {
+  @media #{map-get($breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+
+// pxからremへの変換
+@function pxToRem($size, $base-font-size: 16px) {
+  @return calc($size / $base-font-size) * 1rem;
+}
+
+// 行数を指定して「...」に変換
+@mixin line-clamp($count: 3) {
+  // 引数が数値以外だったらエラーを返す
+  @if type-of($count) != "number" {
+    @error 'line-clampの引数は必ず数値で指定してください';
+  }
+
+  @if $count == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $count;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// color system
+// ---------------------
+$c-white: #fff;
+$c-lightGray: #efefef;
+$c-black: #333;
+
+$c-primary: #ca6060;
+
+$c-base-white: $c-white;
+$c-base-lightGray: $c-lightGray;
+$c-base-black: $c-black;
+
+$c-body-white: $c-white;
+$c-body-black: $c-black;

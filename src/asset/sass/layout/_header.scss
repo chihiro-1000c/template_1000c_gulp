@@ -1,0 +1,161 @@
+/* l-header
+--------------------------- */
+@use "./../foundation/mixin" as mixin;
+
+$header-height: 60px;
+
+.l-header {
+  width: 100%;
+  background-color: mixin.$c-base-white;
+
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 4px -4px rgba($color: mixin.$c-base-black, $alpha: 0.6);
+  &.is-headIn {
+    transform: translateY(-100%);
+  }
+
+  &__inner {
+    margin: 0 auto;
+    padding: 10px 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__logo {
+    text-transform: uppercase;
+    text-decoration: none;
+    color: mixin.$c-body-black;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  &__navCta {
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 3px 16px;
+    color: mixin.$c-body-white;
+    background-color: mixin.$c-base-black;
+    border: solid 1px mixin.$c-base-black;
+    border-radius: 50px;
+    &:hover {
+      color: mixin.$c-body-black;
+      background-color: transparent;
+      text-decoration: none;
+    }
+  }
+
+  &__navLists {
+    z-index: 1;
+    position: fixed;
+    top: $header-height;
+    left: 0;
+    left: 100%;
+    width: 100%;
+    max-width: 100vw;
+    background: mixin.$c-base-white;
+    text-align: center;
+    a {
+      color: mixin.$c-body-black;
+      text-decoration: none;
+      text-transform: uppercase;
+      position: relative;
+      display: inline-block;
+      padding: 0 16px;
+      margin: 16px auto;
+      &::after {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        content: "";
+        width: 0;
+        height: 2px;
+        background-color: mixin.$c-base-black;
+        transition: 0.4s;
+        transform: translateX(-50%);
+      }
+      &:hover {
+        text-decoration: none;
+        &:after {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &__navHamburger {
+    display: block;
+    position: relative;
+    width: 25px;
+    height: calc($header-height - 20px);
+    transition: transform 0.4s ease-in;
+    & > span,
+    & > span:before,
+    & > span:after {
+      display: block;
+      position: absolute;
+      height: 4px;
+      width: 25px;
+      background-color: mixin.$c-base-black;
+      border-radius: 1px;
+      content: "";
+      cursor: pointer;
+    }
+    & > span {
+      top: 47%;
+      &:before {
+        transform: translateY(-9px);
+      }
+      &:after {
+        transform: translateY(9px);
+      }
+    }
+  }
+
+  &__navClose {
+    display: none;
+    position: fixed;
+    top: $header-height;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: 0.4s ease-in-out;
+  }
+
+  /* menu toggle */
+  #l-header__navToggle {
+    display: none;
+  }
+  #l-header__navToggle:checked {
+    & + .l-header__navHamburger {
+      transform: rotate(45deg);
+      span:before,
+      span:after {
+        transition: all 0.4s;
+        transform: rotate(90deg);
+      }
+    }
+    & ~ .l-header__navClose {
+      display: block;
+    }
+    & ~ .l-header__navLists {
+      display: block;
+      top: $header-height;
+      left: 0;
+    }
+  }
+}

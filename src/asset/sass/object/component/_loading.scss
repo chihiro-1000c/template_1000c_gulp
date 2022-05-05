@@ -1,0 +1,36 @@
+/* c-loading
+--------------------------- */
+@use "./../../foundation/mixin" as mixin;
+
+.c-loading {
+  width: 100vw;
+  height: 100vh;
+  transition: all 1s;
+  background-color: mixin.$c-base-white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  &.is-loaded {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &__spinner {
+    width: 100px;
+    height: 100px;
+    margin: 40vh auto;
+    border: 3px solid mixin.$c-primary;
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: loadingAnimation 0.8s linear 0s infinite;
+  }
+  @keyframes loadingAnimation {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
+}

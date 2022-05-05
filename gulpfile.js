@@ -3,6 +3,8 @@ const { src, dest } = require("gulp");
 const loadPlugins = require("gulp-load-plugins");
 const $ = loadPlugins();
 
+const autoprefixer = require("autoprefixer");
+
 // Node.jsでファイルを操作するための公式モジュール
 const fs = require("fs");
 
@@ -31,6 +33,13 @@ const distPath = {
 };
 
 // ------------------------------------------------------------------------
+
+/**
+ * html
+ */
+const html = () => {
+  return src(srcPath.html).pipe(dest(distPath.html));
+};
 
 /**
  * ejs
@@ -90,7 +99,41 @@ const imgMin = () => {
     .pipe(browserSync.stream());
 };
 
+/**
+ * sass
+ */
+const cssSass = () => {
+  return src(srcPath.scss, {
+    sourcemaps: true,
+  })
+    .pipe($.sassGlobUseForward())
+    .pipe(
+      //エラーが出ても処理を止めない
+      $.plumber({
+        errorHandler: $.notify.onError("Error:<%= error.message %>"),
+      })
+    )
+    .pipe($.dartSass({ outputStyle: "expanded" })) //指定できるキー expanded compressed
+    .pipe($.postcss([autoprefixer()]))
+    .pipe(
+      $.purgecss({
+        content: ["./src/**/*.html", "./src/**/*.ejs", "./src/**/*.js"], // src()のファイルで使用される可能性のあるファイルを全て指定
+      })
+    )
+    .pipe($.cleanCss())
+    .pipe(dest(distPath.css, { sourcemaps: "./" })) //コンパイル先
+    .pipe(browserSync.stream())
+    .pipe(
+      $.notify({
+        message: "Sassをコンパイルしました！",
+        onLast: true,
+      })
+    );
+};
+
 // ------------------------------------------------------------------------
 
+exports.html = html;
 exports.ejsHtml = ejsHtml;
 exports.imgMin = imgMin;
+exports.cssSass = cssSass;

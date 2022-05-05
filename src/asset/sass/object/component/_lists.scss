@@ -1,0 +1,22 @@
+/* c-lists
+--------------------------- */
+@use "./../../foundation/mixin" as mixin;
+
+.c-lists {
+  li {
+    position: relative;
+    padding-left: 24px;
+    &:before {
+      position: absolute;
+      left: 0;
+      content: "\e876";
+      font-family: "Material Icons";
+      font-weight: 900;
+    }
+  }
+
+  &Title {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+}

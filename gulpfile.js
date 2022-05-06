@@ -8,6 +8,8 @@ const del = require("del");
 const browserSync = require("browser-sync");
 const fs = require("fs");
 
+// ------------------------------------------------------------------------
+
 // 入出力するフォルダを指定
 const srcBase = "./src";
 const distBase = "./dist";
@@ -181,6 +183,7 @@ exports.html = html;
 exports.ejsHtml = ejsHtml;
 exports.imgMin = imgMin;
 exports.cssSass = cssSass;
+
 exports.build = build;
 
 exports.default = series(build, parallel(startAppServer, browserSyncFunc));

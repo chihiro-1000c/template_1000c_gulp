@@ -1,15 +1,12 @@
 // gulp本体の機能を分割代入
-const { src, dest } = require("gulp");
+const { src, dest, watch, series, parallel } = require("gulp");
 const loadPlugins = require("gulp-load-plugins");
 const $ = loadPlugins();
 
 const autoprefixer = require("autoprefixer");
-
-// Node.jsでファイルを操作するための公式モジュール
-const fs = require("fs");
-
-//ブラウザリロード
+const del = require("del");
 const browserSync = require("browser-sync");
+const fs = require("fs");
 
 // 入出力するフォルダを指定
 const srcBase = "./src";
@@ -131,9 +128,59 @@ const cssSass = () => {
     );
 };
 
+/**
+ * distをリセット
+ */
+const clean = () => {
+  return del([distBase + "/**"], {
+    force: true,
+  });
+};
+
+/**
+ * ローカルサーバー立ち上げ
+ */
+const browserSyncFunc = () => {
+  browserSync.init(browserSyncOption);
+};
+
+const browserSyncOption = {
+  server: distBase,
+};
+
+/**
+ * リロード
+ */
+const browserSyncReload = (done) => {
+  browserSync.reload();
+  done();
+};
+
+/**
+ *
+ * ファイル監視 ファイルの変更を検知したら、browserSyncReloadでreloadメソッドを呼び出す
+ * series 順番に実行
+ * watch('監視するファイル',処理)
+ */
+
+function startAppServer() {
+  watch(srcPath.html, series(html, browserSyncReload));
+  watch(srcPath.watchEjs, series(ejsHtml, browserSyncReload));
+  watch(srcPath.img, series(imgMin, browserSyncReload));
+  watch(srcPath.scss, series(cssSass, browserSyncReload));
+}
+
 // ------------------------------------------------------------------------
+
+// 「gulp build」で、ビルドだけ
+// 「gulp」で、ビルド＋変更監視・ライブサーバー立ち上げ
+
+const build = series(clean, parallel(html, ejsHtml, cssSass, imgMin));
 
 exports.html = html;
 exports.ejsHtml = ejsHtml;
 exports.imgMin = imgMin;
 exports.cssSass = cssSass;
+exports.build = build;
+
+exports.default = series(build, parallel(startAppServer, browserSyncFunc));

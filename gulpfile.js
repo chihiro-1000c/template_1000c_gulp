@@ -131,6 +131,30 @@ const cssSass = () => {
 };
 
 /**
+ *
+ * js
+ */
+
+const js = () => {
+  return src(srcPath.js)
+    .pipe($.sourcemaps.init())
+    .pipe($.babel())
+    .pipe($.sourcemaps.write("."))
+    .pipe(dest(distPath.js));
+};
+
+/**
+ *
+ * copy-library
+ */
+
+const cpJsLib = () => {
+  return src(["node_modules/jquery/dist/jquery.min.js"]).pipe(
+    dest(distPath.js)
+  );
+};
+
+/**
  * distをリセット
  */
 const clean = () => {
@@ -170,6 +194,7 @@ function startAppServer() {
   watch(srcPath.watchEjs, series(ejsHtml, browserSyncReload));
   watch(srcPath.img, series(imgMin, browserSyncReload));
   watch(srcPath.scss, series(cssSass, browserSyncReload));
+  watch(srcPath.js, series(js, browserSyncReload));
 }
 
 // ------------------------------------------------------------------------
@@ -177,12 +202,17 @@ function startAppServer() {
 // 「gulp build」で、ビルドだけ
 // 「gulp」で、ビルド＋変更監視・ライブサーバー立ち上げ
 
-const build = series(clean, parallel(html, ejsHtml, cssSass, imgMin));
+const build = series(
+  clean,
+  parallel(html, ejsHtml, cssSass, imgMin, js, cpJsLib)
+);
 
 exports.html = html;
 exports.ejsHtml = ejsHtml;
 exports.imgMin = imgMin;
 exports.cssSass = cssSass;
+exports.js = js;
+exports.cpJsLib = cpJsLib;
 
 exports.build = build;
 

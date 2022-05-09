@@ -8,6 +8,11 @@ const del = require("del");
 const browserSync = require("browser-sync");
 const fs = require("fs");
 
+const webpackStream = require("webpack-stream");
+const webpack = require("webpack");
+// webpackの設定ファイルの読み込み
+const webpackConfig = require("./webpack.config");
+
 // ------------------------------------------------------------------------
 
 // 入出力するフォルダを指定
@@ -132,26 +137,11 @@ const cssSass = () => {
 
 /**
  *
- * js
+ * webpack
  */
 
-const js = () => {
-  return src(srcPath.js)
-    .pipe($.sourcemaps.init())
-    .pipe($.babel())
-    .pipe($.sourcemaps.write("."))
-    .pipe(dest(distPath.js));
-};
-
-/**
- *
- * copy-library
- */
-
-const cpJsLib = () => {
-  return src(["node_modules/jquery/dist/jquery.min.js"]).pipe(
-    dest(distPath.js)
-  );
+const jsWebpack = () => {
+  return webpackStream(webpackConfig, webpack).pipe(dest(distPath.js));
 };
 
 /**
@@ -194,7 +184,7 @@ function startAppServer() {
   watch(srcPath.watchEjs, series(ejsHtml, browserSyncReload));
   watch(srcPath.img, series(imgMin, browserSyncReload));
   watch(srcPath.scss, series(cssSass, browserSyncReload));
-  watch(srcPath.js, series(js, browserSyncReload));
+  watch(srcPath.js, series(jsWebpack, browserSyncReload));
 }
 
 // ------------------------------------------------------------------------
@@ -204,15 +194,14 @@ function startAppServer() {
 
 const build = series(
   clean,
-  parallel(html, ejsHtml, cssSass, imgMin, js, cpJsLib)
+  parallel(html, ejsHtml, cssSass, imgMin, jsWebpack)
 );
 
 exports.html = html;
 exports.ejsHtml = ejsHtml;
 exports.imgMin = imgMin;
 exports.cssSass = cssSass;
-exports.js = js;
-exports.cpJsLib = cpJsLib;
+exports.jsWebpack = jsWebpack;
 
 exports.build = build;
 
